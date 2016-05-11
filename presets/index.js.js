@@ -1,0 +1,1 @@
+presets['index.js'] = {"content": "// inject styles.css\nvar style = document.createElement('style');\nstyle.type = 'text/css';\nstyle.innerHTML = files['styles.css'].content;\ndocument.getElementsByTagName('head')[0].appendChild(style);\n// app code \nfunction testFunction(){\n  alert('hi :)');\n}"}

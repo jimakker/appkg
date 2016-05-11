@@ -1,0 +1,1 @@
+presets['index.html'] = {"content" :"<head>\n<title>New App</title>\n</head>\n<h1>New App</h1>\n<p>This is your new App!</p>\n<button onclick='testFunction()'>test</button>\n<script>\nvar db = window.parent.db;\nvar files = window.parent.files;\n// load js dependencies\nvar scripts = files['index.js'];\neval(scripts.content);\n</script>"}

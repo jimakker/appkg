@@ -1,0 +1,123 @@
+HTML:
+
+
+
+<head>
+<title>Simple ToDo Lis in appkg</title>
+</head>
+<h1>Simple ToDo List in appkg</h1>
+<form onSubmit="return addItem()" >
+<button>Add</button>
+<input type="text" id="item_title" placeholder="Title">
+</form>
+<br>
+<ul id="item_list"></ul>
+
+<script>
+var db = window.parent.db;
+var files = window.parent.files;
+// load js dependencies
+var scripts = files['index.js'];
+eval(scripts.content);
+</script>
+
+
+
+
+
+
+
+
+CSS
+
+
+#item_list li.open {
+
+}
+
+#item_list li.open button.open, #item_list li.open button.delete {
+  display:none;
+}
+
+#item_list li.closed {
+  text-decoration: line-through;
+}
+
+#item_list li.closed button.close {
+display:none;
+}
+
+
+
+
+JS:
+// db, files
+
+var itemlist = document.getElementById('item_list');
+var itemtitle = document.getElementById('item_title');
+
+
+// inject styles.css
+var style = document.createElement('style');
+style.type = 'text/css';
+style.innerHTML = files['styles.css'].content;
+document.getElementsByTagName('head')[0].appendChild(style);
+// app code
+
+try {
+  var res = db.exec("SELECT * FROM item");
+  if(res[0] && res[0].values.length) {
+    renderItems(res[0].values || []);
+  } else {
+    renderItems([]);
+  }
+
+} catch(e) {
+  if(e.message === "no such table: item") {
+    console.log('no items table, creating...');
+    db.run("CREATE TABLE item (id INTEGER PRIMARY KEY, title TEXT, content TEXT, status TEXT, createdAt TEXT, updatedAt TEXT);");
+  renderItems([])
+  }
+}
+
+function loadItems(){
+  var res = db.exec("SELECT * FROM item");
+  if(res[0] && res[0].values.length) {
+    renderItems(res[0].values || []);
+  } else {
+    renderItems([]);
+  }
+}
+
+function renderItems(items){
+  var output = [];
+  items.map(function(v){
+    output.push('<li class="'+ v[3] +'">'+ v[0] +': <span class="item-title">'+ v[1] + '</span> <button class="open" onclick="setItemStatus('+v[0]+',\'open\')">reopen</button> <button class="close" onclick="setItemStatus('+v[0]+',\'closed\')">done</button> <button class="delete" onclick="deleteItem('+v[0]+')">X</button></li>')
+  });
+  itemlist.innerHTML = output.join('');
+}
+
+function addItem(){
+  if(itemtitle.value){
+    db.run("INSERT INTO item (title, status) VALUES(?, ?)", [
+      itemtitle.value,
+      'open'
+    ]);
+    loadItems();
+    itemtitle.value='';
+  }
+
+  return false;
+}
+
+function deleteItem(id){
+  db.run("DELETE FROM item WHERE id=?", [id]);
+  loadItems();
+}
+
+function setItemStatus(id, status){
+  db.run("UPDATE item SET status = ? WHERE id = ?", [
+    status,
+    id]);
+  loadItems();
+}

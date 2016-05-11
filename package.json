@@ -1,0 +1,15 @@
+{
+  "name": "liteweb",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openpgp": "^2.3.0",
+    "sql.js": "^0.3.2"
+  }
+}

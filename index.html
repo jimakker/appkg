@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>appkg</title>
+    <script src="/node_modules/openpgp/dist/openpgp.js"></script>
+    <script src="/node_modules/sql.js/js/sql.js"></script>
+    <style>
+      body {
+        padding-top: 50px;
+      }
+      #appframe {
+        width: 100%;
+        height: calc(100vh - 110px);
+        border:0;
+      }
+      #appkg-footer {
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        /*min-height: 30px;*/
+        background-color: #ddd;
+        font-size: small;
+        padding:10px;
+      }
+      #appkg-header {
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        /*min-height: 30px;*/
+        background-color: #ddd;
+        /*font-size: small;*/
+        padding:10px;
+      }
+      #filecontent {
+        width:100%;
+        height: calc(100vh - 145px);
+
+      }
+    </style>
+  </head>
+  <body>
+    <div id="appkg-header">
+      <a href="/" style="text-decoration:none;color:#000;"><strong>appkg</strong></a> |
+      <button onclick="newApp()">New App</button> |
+      Load appkg: <input id="dbfile" type="file">
+      <button style="float:right;" onclick="exportDB()">Save App</button>
+    </div>
+
+    <div style="float:left;width:49%;">
+      <iframe id="appframe"></iframe>
+    </div>
+    <div style="float:right;width:49%;">
+      <div style="width:75%;float:left;">
+        <input type="text" disabled id="filename"> <button onclick="saveFile()">save</button>
+        <br>
+        <textarea id="filecontent"></textarea>
+        <input type="hidden" id="fileid">
+      </div>
+      <div style="width:20%;float:right;" id="filemenu"><ul id="filemenu-files"></ul></div>
+    <div>
+
+    <footer id="appkg-footer">
+      <strong>appkg</strong> by jimakker | <a target="_blank" href="https://twitter.com/jimakker">twitter</a> | <a target="_blank" href="https://gitlab.com/jimakker/appkg">gitlab</a> | <a target="_blank" href="https://github.com/jimakker/appkg">github</a>
+      <span style="float:right;">=:)</span>
+    </footer>
+
+    <script>
+      var presets = {};
+    </script>
+    <script src="/presets/index.html.js"></script>
+    <script src="/presets/index.js.js"></script>
+    <script src="/presets/styles.css.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
