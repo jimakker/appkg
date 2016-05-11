@@ -5,7 +5,7 @@ var fileid = document.getElementById('fileid');
 var filecontent = document.getElementById('filecontent');
 var filemenu = document.getElementById('filemenu-files');
 
-iframe.src="/presets/welcome.html"
+iframe.src="presets/welcome.html"
 
 dbFileElm.onchange = function() {
     var f = dbFileElm.files[0];
