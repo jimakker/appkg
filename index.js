@@ -8,37 +8,37 @@ var filemenu = document.getElementById('filemenu-files');
 iframe.src="presets/welcome.html"
 
 dbFileElm.onchange = function() {
-    var f = dbFileElm.files[0];
-    var r = new FileReader();
-    r.onload = function() {
-        var Uints = new Uint8Array(r.result);
-        try {
-          var db = window.db = new SQL.Database(Uints);
-          var res = db.exec("SELECT * FROM file");
-          startApp(db);
-        } catch(e) {
-          var password = prompt('password');
-          options = {
-            message: openpgp.message.read(Uints),
-            password: password,
-            format: 'binary'
-          };
-          openpgp.decrypt(options).then(function(plaintext) {
-            try {
-              var db = window.db = new SQL.Database(plaintext.data);
-              var res = db.exec("SELECT * FROM file");
-              startApp(db);
-            } catch(e) {
-              alert("Can't open appkg :(");
-            }
-          }).catch(function(e) {
-            if(e.message === "Error decrypting message: Invalid enum value.") {
-              alert('Wrong password!');
-            }
-          });
-        }
-    }
-    r.readAsArrayBuffer(f);
+  var f = dbFileElm.files[0];
+  var r = new FileReader();
+  r.onload = function() {
+    var Uints = new Uint8Array(r.result);
+      try {
+        var db = window.db = new SQL.Database(Uints);
+        var res = db.exec("SELECT * FROM file");
+        startApp(db);
+      } catch(e) {
+        var password = prompt('password');
+        options = {
+          message: openpgp.message.read(Uints),
+          password: password,
+          format: 'binary'
+        };
+        openpgp.decrypt(options).then(function(plaintext) {
+          try {
+            var db = window.db = new SQL.Database(plaintext.data);
+            var res = db.exec("SELECT * FROM file");
+            startApp(db);
+          } catch(e) {
+            alert("Can't open appkg :(");
+          }
+        }).catch(function(e) {
+          if(e.message === "Error decrypting message: Invalid enum value.") {
+            alert('Wrong password!');
+          }
+        });
+      }
+  }
+  r.readAsArrayBuffer(f);
 }
 
 filecontent.onkeyup = function() {
@@ -124,7 +124,7 @@ function exportDB(){
 function renderFileMenu(){
   var output = [];
   for (var file in files) {
-    var li = '<li onclick="loadFile(\'' + file + '\')">' + file + '</li>';
+    var li = '<li  style="cursor:pointer;" onclick="loadFile(\'' + file + '\')">' + file + '</li>';
     output.push(li);
   }
   filemenu.innerHTML = output.join('');
@@ -134,10 +134,12 @@ function loadFile(file){
   filename.value = files[file].filename;
   filecontent.value = files[file].content;
   fileid.value = files[file].id;
+  filecontent.disabled = false;
 }
 
 function unloadFile(){
   filename.value = '';
   filecontent.value = '';
   fileid.value = '';
+  filecontent.disabled = true;
 }

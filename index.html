@@ -45,7 +45,7 @@
       <a href="https://jimakker.gitlab.io/appkg/" style="text-decoration:none;color:#000;"><strong>appkg</strong></a> |
       <button onclick="newApp()">New App</button> |
       Load appkg: <input id="dbfile" type="file">
-      <button style="float:right;" onclick="exportDB()">Save App</button>
+      <button style="float:right;" onclick="exportDB()">Save / Export App</button>
     </div>
 
     <div style="float:left;width:49%;">
@@ -53,9 +53,9 @@
     </div>
     <div style="float:right;width:49%;">
       <div style="width:75%;float:left;">
-        <input type="text" disabled id="filename"> <button onclick="saveFile()">save</button>
+        <input type="text" disabled id="filename"> <button onclick="saveFile()">save</button> <small style="color:rgb(200, 26, 26);">(save files before exporting!)</small>
         <br>
-        <textarea id="filecontent"></textarea>
+        <textarea id="filecontent" disabled></textarea>
         <input type="hidden" id="fileid">
       </div>
       <div style="width:20%;float:right;" id="filemenu"><ul id="filemenu-files"></ul></div>
