@@ -7,43 +7,54 @@ var filemenu = document.getElementById('filemenu-files');
 
 iframe.src="presets/welcome.html"
 
+function initDB(Uints){
+  try {
+    var db = window.db = new SQL.Database(Uints);
+    var res = db.exec("SELECT * FROM file");
+    startApp(db);
+  } catch(e) {
+    var password = prompt('password');
+    var message = '';
+    try {
+      message = openpgp.message.read(Uints)
+    } catch (e) {
+      console.log(e);
+      return alert('invalid file');
+    }
+    options = {
+      message: message,
+      password: password,
+      format: 'binary'
+    };
+    openpgp.decrypt(options).then(function(plaintext) {
+      try {
+        var db = window.db = new SQL.Database(plaintext.data);
+        var res = db.exec("SELECT * FROM file");
+        startApp(db);
+      } catch(e) {
+        alert("Can't open appkg :(");
+      }
+    }).catch(function(e) {
+      if(e.message === "Error decrypting message: Invalid enum value.") {
+        alert('Wrong password!');
+      }
+    });
+  }
+}
+
 dbFileElm.onchange = function() {
   var f = dbFileElm.files[0];
   var r = new FileReader();
   r.onload = function() {
     var Uints = new Uint8Array(r.result);
-      try {
-        var db = window.db = new SQL.Database(Uints);
-        var res = db.exec("SELECT * FROM file");
-        startApp(db);
-      } catch(e) {
-        var password = prompt('password');
-        options = {
-          message: openpgp.message.read(Uints),
-          password: password,
-          format: 'binary'
-        };
-        openpgp.decrypt(options).then(function(plaintext) {
-          try {
-            var db = window.db = new SQL.Database(plaintext.data);
-            var res = db.exec("SELECT * FROM file");
-            startApp(db);
-          } catch(e) {
-            alert("Can't open appkg :(");
-          }
-        }).catch(function(e) {
-          if(e.message === "Error decrypting message: Invalid enum value.") {
-            alert('Wrong password!');
-          }
-        });
-      }
+    initDB(Uints);
   }
   r.readAsArrayBuffer(f);
 }
 
 filecontent.onkeyup = function() {
   files[filename.value].content = filecontent.value;
-  iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(files['index.html'].content);
+  setIframeContent(files['index.html'].content);
 }
 
 function startApp(db) {
@@ -60,7 +71,7 @@ function startApp(db) {
     }
     files[file.filename] = file;
   });
-  iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(files['index.html'].content);
+  setIframeContent(files['index.html'].content);
   renderFileMenu();
 }
 
@@ -89,36 +100,6 @@ function saveFile(){
     fileid.value
   ]);
   files[filename.value].content = filecontent.value;
-}
-
-function exportDB(){
-  var arraybuff = db.export();
-
-  var password = window.prompt("Set encryption password. Leave empty if you don't want to encrypt it.");
-  if(password) {
-    var passwordConfirm = window.prompt('Confirm encryption password');
-    if(passwordConfirm && passwordConfirm === password) {
-      options = {
-        data: arraybuff,
-        passwords: [password],
-        armor: false
-      };
-      openpgp.encrypt(options).then(function(ciphertext) {
-        arraybuff = ciphertext.message.packets.write();
-        _export();
-      });
-    } else {
-      return alert("Passwords don't match");
-    }
-  } else {
-    _export();
-  }
-  function _export(){
-    var blob = new Blob([arraybuff]);
-    var url = window.URL.createObjectURL(blob);
-    window.location = url;
-    window.URL.revokeObjectURL(url);
-  }
 }
 
 function renderFileMenu(){
