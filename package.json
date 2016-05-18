@@ -1,12 +1,12 @@
 {
-  "name": "liteweb",
-  "version": "0.0.1",
-  "description": "",
+  "name": "appkg",
+  "version": "0.1.0",
+  "description": "Web apps embedded in encrypted SQLite databases",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "jimakker",
   "license": "ISC",
   "dependencies": {
     "openpgp": "^2.3.0",
