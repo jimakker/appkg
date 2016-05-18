@@ -124,3 +124,14 @@ function unloadFile(){
   fileid.value = '';
   filecontent.disabled = true;
 }
+
+if(window.location.hash){
+  loadFromUrl(window.location.hash.substr(1), function(err, dbArray){
+    if(err){
+      console.log(err);
+      alert("Error loading appkg from url");
+    } else {
+      initDB(dbArray);
+    }
+  })
+}
